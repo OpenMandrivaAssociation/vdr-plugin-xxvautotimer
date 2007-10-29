@@ -2,7 +2,7 @@
 %define plugin	xxvautotimer
 %define name	vdr-plugin-%plugin
 %define version	0.1.2
-%define rel	4
+%define rel	5
 
 Summary:	VDR plugin: Autotimer for XXV
 Name:		%name

@@ -12,7 +12,6 @@ Group:		Video
 License:	GPL
 URL:		http://www.vdrtools.de/vdrxxvautotimer.html
 Source:		http://www.vdrtools.de/download/vdr-%plugin-%version.tar.bz2
-BuildRoot:	%{_tmppath}/%{name}-buildroot
 BuildRequires:	vdr-devel >= 1.4.1-6
 BuildRequires:	mysql-devel
 Requires:	vdr-abi = %vdr_abi

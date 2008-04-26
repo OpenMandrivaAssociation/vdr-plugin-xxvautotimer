@@ -2,7 +2,7 @@
 %define plugin	xxvautotimer
 %define name	vdr-plugin-%plugin
 %define version	0.1.2
-%define rel	6
+%define rel	7
 
 Summary:	VDR plugin: Autotimer for XXV
 Name:		%name
@@ -12,8 +12,9 @@ Group:		Video
 License:	GPL
 URL:		http://www.vdrtools.de/vdrxxvautotimer.html
 Source:		http://www.vdrtools.de/download/vdr-%plugin-%version.tar.bz2
+Patch0:		xxvautotimer-0.1.2-i18n-1.6.patch
 BuildRoot:	%{_tmppath}/%{name}-buildroot
-BuildRequires:	vdr-devel >= 1.4.1-6
+BuildRequires:	vdr-devel >= 1.6.0
 BuildRequires:	mysql-devel
 Requires:	vdr-abi = %vdr_abi
 Requires:       xxv
@@ -25,6 +26,8 @@ Autotimers of XXV via VDR on-screen-display (OSD).
 %prep
 %setup -q -c
 cd %plugin
+%patch0 -p1
+%vdr_plugin_prep
 
 %vdr_plugin_params_begin %plugin
 # xxv configuration file

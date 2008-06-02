@@ -33,7 +33,7 @@ cd %plugin
 # xxv configuration file
 var=XXVD_CFG
 param=--xxvconfigfile=XXVD_CFG
-default=%{_localstatedir}/xxv/xxvd.cfg
+default=%{_localstatedir}/lib/xxv/xxvd.cfg
 %vdr_plugin_params_end
 
 %build

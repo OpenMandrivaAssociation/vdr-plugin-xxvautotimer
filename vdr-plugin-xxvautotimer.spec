@@ -4,6 +4,9 @@
 %define version	0.1.2
 %define rel	8
 
+# backportability
+%define _localstatedir %{_var}
+
 Summary:	VDR plugin: Autotimer for XXV
 Name:		%name
 Version:	%version

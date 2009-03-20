@@ -2,7 +2,7 @@
 %define plugin	xxvautotimer
 %define name	vdr-plugin-%plugin
 %define version	0.1.2
-%define rel	10
+%define rel	11
 
 # backportability
 %define _localstatedir %{_var}

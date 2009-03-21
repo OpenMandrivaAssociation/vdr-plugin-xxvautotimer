@@ -16,6 +16,8 @@ License:	GPL
 URL:		http://www.vdrtools.de/vdrxxvautotimer.html
 Source:		http://www.vdrtools.de/download/vdr-%plugin-%version.tar.bz2
 Patch0:		xxvautotimer-0.1.2-i18n-1.6.patch
+Patch1:		xxvautotimer-includes.patch
+Patch2:		xxvautotimer-format-string.patch
 BuildRoot:	%{_tmppath}/%{name}-buildroot
 BuildRequires:	vdr-devel >= 1.6.0
 BuildRequires:	mysql-devel
@@ -30,6 +32,8 @@ Autotimers of XXV via VDR on-screen-display (OSD).
 %setup -q -c
 cd %plugin
 %patch0 -p1
+%patch1 -p1
+%patch2 -p1
 %vdr_plugin_prep
 
 %vdr_plugin_params_begin %plugin

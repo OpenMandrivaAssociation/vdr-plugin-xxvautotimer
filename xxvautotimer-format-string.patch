@@ -1,0 +1,33 @@
+Index: xxvautotimer/inifile.cpp
+===================================================================
+--- xxvautotimer/inifile.cpp
++++ xxvautotimer/inifile.cpp	2009-03-21 13:01:10.000000000 +0200
+@@ -810,6 +810,6 @@
+ 	OutputDebugString(szMsg.c_str());
+ #endif
+ 
+-	printf(szMsg.c_str());
++	printf("%s", szMsg.c_str());
+ 
+ }
+Index: xxvautotimer/setup.cpp
+===================================================================
+--- xxvautotimer/setup.cpp
++++ xxvautotimer/setup.cpp	2009-03-21 13:00:51.000000000 +0200
+@@ -48,12 +48,12 @@
+ 
+ bool cXxvAutotimerSetup::SetupParse( const char * Name, const char * Value )
+ {
+-    if      (strcmp(Name, strDatabase )       == 0) snprintf(database, sizeof(database), Value);
+-    else if (strcmp(Name, strHost )           == 0) snprintf(host, sizeof(host), Value);
++    if      (strcmp(Name, strDatabase )       == 0) snprintf(database, sizeof(database), "%s", Value);
++    else if (strcmp(Name, strHost )           == 0) snprintf(host, sizeof(host), "%s", Value);
+     else if (strcmp(Name, strTelnetPort )     == 0) telnetPort = atoi(Value);
+     else if (strcmp(Name, strDatabasePort )   == 0) dbPort   = atoi(Value);
+-    else if (strcmp(Name, strDatabaseUser )   == 0) snprintf(user, sizeof(user), Value);
+-    else if (strcmp(Name, strDatabasePasswd ) == 0) snprintf(passwd, sizeof(passwd), Value);
++    else if (strcmp(Name, strDatabaseUser )   == 0) snprintf(user, sizeof(user), "%s", Value);
++    else if (strcmp(Name, strDatabasePasswd ) == 0) snprintf(passwd, sizeof(passwd), "%s", Value);
+     else if (strcmp(Name, strLifetime )       == 0) defaultLifetime   = atoi(Value);
+     else if (strcmp(Name, strPriority )       == 0) defaultPriority   = atoi(Value);
+     else if (strcmp(Name, strXXV020 )         == 0) xxv020      = atoi(Value);

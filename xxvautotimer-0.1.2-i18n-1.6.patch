@@ -1,0 +1,2267 @@
+
+This is a semi-automatically created i18n adaptation patch and may contain
+errors (such as missing translations). This should only be used as a
+temporary measure until the upstream plugin maintainer fixes the plugin
+properly according to the instructions in i18n-to-gettext.pl.
+
+Created for Mandriva Linux packaging by Anssi Hannula <anssi@mandriva.org>.
+
+
+Index: xxvautotimer-0.1.2/Makefile
+===================================================================
+--- xxvautotimer-0.1.2/Makefile
++++ xxvautotimer-0.1.2/Makefile	2008-04-25 12:50:33.000000000 +0300
+@@ -58,7 +58,7 @@
+ 
+ ### The object files (add further files here):
+ 
+-OBJS = $(PLUGIN).o setup.o menu.o i18n.o autotimer.o inifile.o mysocket.o
++OBJS = $(PLUGIN).o setup.o menu.o  autotimer.o inifile.o mysocket.o
+ 
+ ### Implicit rules:
+ 
+@@ -74,9 +74,34 @@
+ 
+ -include $(DEPFILE)
+ 
++### Internationalization (I18N):
++
++PODIR     = po
++LOCALEDIR = $(VDRDIR)/locale
++I18Npo    = $(wildcard $(PODIR)/*.po)
++I18Nmsgs  = $(addprefix $(LOCALEDIR)/, $(addsuffix /LC_MESSAGES/vdr-$(PLUGIN).mo, $(notdir $(foreach file, $(I18Npo), $(basename $(file))))))
++I18Npot   = $(PODIR)/$(PLUGIN).pot
++
++%.mo: %.po
++	msgfmt -c -o $@ $<
++
++$(I18Npot): $(wildcard *.[ch] *.[ch]xx *.cc *.[ch]pp *.hh)
++	xgettext -C -cTRANSLATORS --no-wrap --no-location -k -ktr -ktrNOOP --msgid-bugs-address='<http://qa.mandriva.com/>' -o $@ $^
++
++%.po: $(I18Npot)
++	msgmerge -U --no-wrap --no-location --backup=none -q $@ $<
++	@touch $@
++
++$(I18Nmsgs): $(LOCALEDIR)/%/LC_MESSAGES/vdr-$(PLUGIN).mo: $(PODIR)/%.mo
++	@mkdir -p $(dir $@)
++	cp $< $@
++
++.PHONY: i18n
++i18n: $(I18Nmsgs)
++
+ ### Targets:
+ 
+-all: $(MYSQLWRAPPERDIR)/$(MYSQLWRAPPERLIB) libvdr-$(PLUGIN).so  
++all: $(MYSQLWRAPPERDIR)/$(MYSQLWRAPPERLIB) libvdr-$(PLUGIN).so   i18n
+ 
+ 
+ $(MYSQLWRAPPERDIR)/$(MYSQLWRAPPERLIB):
+@@ -104,5 +129,6 @@
+ 	@echo Distribution package created as $(PACKAGE).tgz
+ 
+ clean:
++	@-rm -f $(PODIR)/*.mo $(PODIR)/*.pot
+ 	@ cd $(MYSQLWRAPPERDIR);make clean
+ 	@rm -f $(OBJS) $(DEPFILE) *.so *.tgz core* *~
+Index: xxvautotimer-0.1.2/autotimer.cpp
+===================================================================
+--- xxvautotimer-0.1.2/autotimer.cpp
++++ xxvautotimer-0.1.2/autotimer.cpp	2008-04-25 12:50:33.000000000 +0300
+@@ -14,7 +14,7 @@
+ #include <vdr/channels.h>
+ #include "setup.h"
+ #include "autotimer.h"
+-#include "i18n.h"
++
+ 
+ 
+ #ifdef HAVE_ICONPATCH
+Index: xxvautotimer-0.1.2/i18n.cpp
+===================================================================
+--- xxvautotimer-0.1.2/i18n.cpp
++++ xxvautotimer-0.1.2/i18n.cpp	2008-04-25 12:50:33.000000000 +0300
+@@ -1,1239 +0,0 @@
+-/****************************************************************************
+- * DESCRIPTION: 
+- *             Internationalisation Strings
+- *
+- * $Id: i18n.cpp,v 1.9 2005/12/03 13:12:42 ralf Exp $
+- *
+- * Contact:    ranga@teddycats.de        
+- *
+- * Copyright (C) 2005 by Ralf Dotzert
+- ****************************************************************************/
+-#include "i18n.h"
+-
+-const tI18nPhrase Phrases[] = {
+-  {
+-    "Autotimer",
+-    "Autotimer",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-
+-  },
+-  { 
+-    "Autotimer for XXV",
+-    "Autotimer für XXV",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-  },
+-  {  
+-    "Edit XXV Autotimers",
+-    "XXV Autotimer ändern",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-  },
+-
+-  {
+-    "Host",
+-    "Host",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-  },
+-
+-  {
+-    "Telnet-Port",
+-    "Telnet-Port",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-  },
+-      
+-  {
+-    "Database",
+-    "Datenbank",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-  },
+-  {
+-    "Database-Port",
+-    "Datenbank Port",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-  },
+-  {
+-    "Database-User",
+-    "Datenbank Login",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-  },
+-  {
+-    "Database-Password",
+-    "Datenbank Passwort",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-  },
+-
+-  {
+-    "Default-Lifetime",
+-    "Standard Lebenszeit",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-  },
+-
+-  {
+-    "Default-Priority",
+-    "Standard Priorität",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-  },
+-
+-  {
+-    "Could not connect to Mysql Database",
+-    "Konnte nicht zur Mysql Datenbank verbinden",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-  },
+-  // one letter for autotimer-list (Title)
+-  { "Display1$T",
+-    "T",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "T",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-  },
+-  // one letter for autotimer-list (Subtitle)
+-  { "Display2$S",
+-    "U",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "S",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-  },
+-  // one letter for autotimer-list (Description)
+-  { "Display3$D",
+-    "B",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "D",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-  },
+-  // one letter for autotimer-list (Except repeat)
+-  { "Display4$R",
+-    "W",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "R",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-  },
+-
+-  { "Active",
+-    "Aktiv",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-  },
+-
+-
+-  { "Searchstring",
+-    "Suchstring",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-  },
+-
+-   { "yes",
+-    "Ja",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-  },
+-  { "no",
+-    "Nein",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-  },
+-
+-  { "Search in title",
+-    "Suche in Titel",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-  },
+-
+-  { "Search in subtitle",
+-    "Suche in Untertitel",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-  },
+-
+-  { "Search in descritption",
+-    "Suche in Beschreibung",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-  },
+-
+-  { "Use start time",
+-    "Nutze Startzeit",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-  },
+-
+-  { "Use stop time",
+-    "Nutze Endzeit",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-  },
+-
+-
+-  { "  Start time of search",
+-    "  Startzeit der Suche",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-  },
+-
+-  { "  End time of search",
+-    "  Endzeit der Suche",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-  },
+-
+-  { "Use channel select",
+-    "Senderwahl benutzen",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-  },
+-
+-  { "  Channel",
+-    "  Kanal",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-  },
+-
+-  { "Directory for recording",
+-    "Verzeichnis für Aufnahme",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-  },
+-
+-  { "Minimum length",
+-    "Mindest Spielzeit",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-  },
+-
+-  { "Priority",
+-    "Priorität",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-  },
+-
+- {  "Lifetime",
+-    "Lebensdauer",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-  },
+-
+- {  "Edit",
+-    "Ändern",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-  },
+- {  "Delete",
+-    "Löschen",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-  },
+-
+- {  "New",
+-    "Neu",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-  },
+-
+- {  "On/Off",
+-    "Ein/Aus",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-  },
+-
+-
+- {  "Delete autotimer?",
+-    "Autotimer löschen?",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-  },
+-
+-
+-{   "Missing search text!",
+-    "Suchtext fehlt!",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-  },
+-  
+-  
+-  { "Update of Database failed!",
+-  "Fehler beim Update der Datenbank!",
+-  "",// TODO Slovenski
+-  "",// TODO Italiano
+-  "",// TODO Nederlands
+-  "",// TODO Português
+-  "",// TODO Francais
+-  "",// TODO Norsk
+-  "",// TODO suomi
+-  "",// TODO Polski
+-  "",// TODO Español
+-  "",// TODO Ellinika
+-  "",// TODO Svenska
+-  "",// TODO Romaneste
+-  "",// TODO Magyar
+-  "",// TODO Català
+-  },
+-
+-
+-  { "Can not Insert Record!",
+-  "Fehler beim Einfügen des Datensatzes!",
+-  "",// TODO Slovenski
+-  "",// TODO Italiano
+-  "",// TODO Nederlands
+-  "",// TODO Português
+-  "",// TODO Francais
+-  "",// TODO Norsk
+-  "",// TODO suomi
+-  "",// TODO Polski
+-  "",// TODO Español
+-  "",// TODO Ellinika
+-  "",// TODO Svenska
+-  "",// TODO Romaneste
+-  "",// TODO Magyar
+-  "",// TODO Català
+-  },
+-  
+-  
+-  { "Can not Delete Record!",
+-  "Fehler beim Löschen des Datensatzes!",
+-  "",// TODO Slovenski
+-  "",// TODO Italiano
+-  "",// TODO Nederlands
+-  "",// TODO Português
+-  "",// TODO Francais
+-  "",// TODO Norsk
+-  "",// TODO suomi
+-  "",// TODO Polski
+-  "",// TODO Español
+-  "",// TODO Ellinika
+-  "",// TODO Svenska
+-  "",// TODO Romaneste
+-  "",// TODO Magyar
+-  "",// TODO Català
+-  },
+-
+-  
+-  { "Nr of channels",
+-  "Anzahl der Kanäle",
+-  "",// TODO Slovenski
+-  "",// TODO Italiano
+-  "",// TODO Nederlands
+-  "",// TODO Português
+-  "",// TODO Francais
+-  "",// TODO Norsk
+-  "",// TODO suomi
+-  "",// TODO Polski
+-  "",// TODO Español
+-  "",// TODO Ellinika
+-  "",// TODO Svenska
+-  "",// TODO Romaneste
+-  "",// TODO Magyar
+-  "",// TODO Català
+-  },
+-
+-  {
+-  "Search text to small - use anyway?",
+-  "Suchtext ist zu kurz - trotzdem verwenden?",
+-  "",// TODO Slovenski
+-  "",// TODO Italiano
+-  "",// TODO Nederlands
+-  "",// TODO Português
+-  "",// TODO Francais
+-  "",// TODO Norsk
+-  "",// TODO suomi
+-  "",// TODO Polski
+-  "",// TODO Español
+-  "",// TODO Ellinika
+-  "",// TODO Svenska
+-  "",// TODO Romaneste
+-  "",// TODO Magyar
+-  "",// TODO Català
+-  },
+-
+-  {
+-    "XXV Version < 0.30",
+-    "XXV Version < 0.30",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-  },
+-
+-  {
+-    "Use VPS",
+-    "Nutze VPS",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-  },
+-  
+-  { "Default Recording at start",
+-  "Standard-Zeitpuffer am Anfang",
+-  "",// TODO Slovenski
+-  "",// TODO Italiano
+-  "",// TODO Nederlands
+-  "",// TODO Português
+-  "",// TODO Francais
+-  "",// TODO Norsk
+-  "",// TODO suomi
+-  "",// TODO Polski
+-  "",// TODO Español
+-  "",// TODO Ellinika
+-  "",// TODO Svenska
+-  "",// TODO Romaneste
+-  "",// TODO Magyar
+-  "",// TODO Català
+-  },
+-
+-  { "  Recording at start (min)",
+-    "  Zeitpuffer am Anfang (min)",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-    },
+-
+-  { "  Recording at stop (min)",
+-    "  Zeitpuffer am Ende (min)",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-    },
+-
+-    { "Default Recording at stop",
+-    "Standard-Zeitpuffer am Ende",
+-    "",// TODO Slovenski
+-    "",// TODO Italiano
+-    "",// TODO Nederlands
+-    "",// TODO Português
+-    "",// TODO Francais
+-    "",// TODO Norsk
+-    "",// TODO suomi
+-    "",// TODO Polski
+-    "",// TODO Español
+-    "",// TODO Ellinika
+-    "",// TODO Svenska
+-    "",// TODO Romaneste
+-    "",// TODO Magyar
+-    "",// TODO Català
+-    },
+-
+-    { "Weekdays",
+-      "Wochentage",
+-      "",// TODO Slovenski
+-      "",// TODO Italiano
+-      "",// TODO Nederlands
+-      "",// TODO Português
+-      "",// TODO Francais
+-      "",// TODO Norsk
+-      "",// TODO suomi
+-      "",// TODO Polski
+-      "",// TODO Español
+-      "",// TODO Ellinika
+-      "",// TODO Svenska
+-      "",// TODO Romaneste
+-      "",// TODO Magyar
+-      "",// TODO Català
+-      },
+-
+-      { "  Monday",
+-        "  Montag",
+-        "",// TODO Slovenski
+-        "",// TODO Italiano
+-        "",// TODO Nederlands
+-        "",// TODO Português
+-        "",// TODO Francais
+-        "",// TODO Norsk
+-        "",// TODO suomi
+-        "",// TODO Polski
+-        "",// TODO Español
+-        "",// TODO Ellinika
+-        "",// TODO Svenska
+-        "",// TODO Romaneste
+-        "",// TODO Magyar
+-        "",// TODO Català
+-        },
+-
+-        { "  Tuesday",
+-          "  Dienstag",
+-          "",// TODO Slovenski
+-          "",// TODO Italiano
+-          "",// TODO Nederlands
+-          "",// TODO Português
+-          "",// TODO Francais
+-          "",// TODO Norsk
+-          "",// TODO suomi
+-          "",// TODO Polski
+-          "",// TODO Español
+-          "",// TODO Ellinika
+-          "",// TODO Svenska
+-          "",// TODO Romaneste
+-          "",// TODO Magyar
+-          "",// TODO Català
+-        },
+-        { "  Wednesday",
+-          "  Mittwoch",
+-          "",// TODO Slovenski
+-          "",// TODO Italiano
+-          "",// TODO Nederlands
+-          "",// TODO Português
+-          "",// TODO Francais
+-          "",// TODO Norsk
+-          "",// TODO suomi
+-          "",// TODO Polski
+-          "",// TODO Español
+-          "",// TODO Ellinika
+-          "",// TODO Svenska
+-          "",// TODO Romaneste
+-          "",// TODO Magyar
+-          "",// TODO Català
+-        },
+-        { "  Thursday",
+-          "  Donnerstag",
+-          "",// TODO Slovenski
+-          "",// TODO Italiano
+-          "",// TODO Nederlands
+-          "",// TODO Português
+-          "",// TODO Francais
+-          "",// TODO Norsk
+-          "",// TODO suomi
+-          "",// TODO Polski
+-          "",// TODO Español
+-          "",// TODO Ellinika
+-          "",// TODO Svenska
+-          "",// TODO Romaneste
+-          "",// TODO Magyar
+-          "",// TODO Català
+-        },
+-        { "  Friday",
+-          "  Freitag",
+-          "",// TODO Slovenski
+-          "",// TODO Italiano
+-          "",// TODO Nederlands
+-          "",// TODO Português
+-          "",// TODO Francais
+-          "",// TODO Norsk
+-          "",// TODO suomi
+-          "",// TODO Polski
+-          "",// TODO Español
+-          "",// TODO Ellinika
+-          "",// TODO Svenska
+-          "",// TODO Romaneste
+-          "",// TODO Magyar
+-          "",// TODO Català
+-        },
+-        { "  Saturday",
+-          "  Samstag",
+-          "",// TODO Slovenski
+-          "",// TODO Italiano
+-          "",// TODO Nederlands
+-          "",// TODO Português
+-          "",// TODO Francais
+-          "",// TODO Norsk
+-          "",// TODO suomi
+-          "",// TODO Polski
+-          "",// TODO Español
+-          "",// TODO Ellinika
+-          "",// TODO Svenska
+-          "",// TODO Romaneste
+-          "",// TODO Magyar
+-          "",// TODO Català
+-        },
+-
+-        { "  Sunday",
+-          "  Sonntag",
+-          "",// TODO Slovenski
+-          "",// TODO Italiano
+-          "",// TODO Nederlands
+-          "",// TODO Português
+-          "",// TODO Francais
+-          "",// TODO Norsk
+-          "",// TODO suomi
+-          "",// TODO Polski
+-          "",// TODO Español
+-          "",// TODO Ellinika
+-          "",// TODO Svenska
+-          "",// TODO Romaneste
+-          "",// TODO Magyar
+-          "",// TODO Català
+-        },
+-
+-        {
+-          "Commands",
+-          "Befehle",
+-          "",// TODO Slovenski
+-          "",// TODO Italiano
+-          "",// TODO Nederlands
+-          "",// TODO Português
+-          "",// TODO Francais
+-          "",// TODO Norsk
+-          "",// TODO suomi
+-          "",// TODO Polski
+-          "",// TODO Español
+-          "",// TODO Ellinika
+-          "",// TODO Svenska
+-          "",// TODO Romaneste
+-          "",// TODO Magyar
+-          "",// TODO Català
+-        },
+-
+-        {
+-          "XXV Commands",
+-          "XXV Befehle",
+-          "",// TODO Slovenski
+-          "",// TODO Italiano
+-          "",// TODO Nederlands
+-          "",// TODO Português
+-          "",// TODO Francais
+-          "",// TODO Norsk
+-          "",// TODO suomi
+-          "",// TODO Polski
+-          "",// TODO Español
+-          "",// TODO Ellinika
+-          "",// TODO Svenska
+-          "",// TODO Romaneste
+-          "",// TODO Magyar
+-          "",// TODO Català
+-        },
+-        { "XXVD Configuration is used:",
+-        "Nutze XXV Konfiguration:",
+-        "",// TODO Slovenski
+-        "",// TODO Italiano
+-        "",// TODO Nederlands
+-        "",// TODO Português
+-        "",// TODO Francais
+-        "",// TODO Norsk
+-        "",// TODO suomi
+-        "",// TODO Polski
+-        "",// TODO Español
+-        "",// TODO Ellinika
+-        "",// TODO Svenska
+-        "",// TODO Romaneste
+-        "",// TODO Magyar
+-        "",// TODO Català
+-        },
+-
+-        { "Ignore recurrences",
+-          "Ignoriere Wiederholungen",
+-          "",// TODO Slovenski
+-          "",// TODO Italiano
+-          "",// TODO Nederlands
+-          "",// TODO Português
+-          "",// TODO Francais
+-          "",// TODO Norsk
+-          "",// TODO suomi
+-          "",// TODO Polski
+-          "",// TODO Español
+-          "",// TODO Ellinika
+-          "",// TODO Svenska
+-          "",// TODO Romaneste
+-          "",// TODO Magyar
+-          "",// TODO Català
+-        },
+-
+-
+-        { "create timers",
+-          "starte den Autotimervorgang",
+-          "",// TODO Slovenski
+-          "",// TODO Italiano
+-          "",// TODO Nederlands
+-          "",// TODO Português
+-          "",// TODO Francais
+-          "",// TODO Norsk
+-          "",// TODO suomi
+-          "",// TODO Polski
+-          "",// TODO Español
+-          "",// TODO Ellinika
+-          "",// TODO Svenska
+-          "",// TODO Romaneste
+-          "",// TODO Magyar
+-          "",// TODO Català
+-        },
+-        {
+-          "read EPG data",
+-          "lese EPG Daten ein",
+-          "",// TODO Slovenski
+-          "",// TODO Italiano
+-          "",// TODO Nederlands
+-          "",// TODO Português
+-          "",// TODO Francais
+-          "",// TODO Norsk
+-          "",// TODO suomi
+-          "",// TODO Polski
+-          "",// TODO Español
+-          "",// TODO Ellinika
+-          "",// TODO Svenska
+-          "",// TODO Romaneste
+-          "",// TODO Magyar
+-          "",// TODO Català
+-        },
+-
+-        {
+-          "read channels",
+-          "lese Kanalliste ein",
+-          "",// TODO Slovenski
+-          "",// TODO Italiano
+-          "",// TODO Nederlands
+-          "",// TODO Português
+-          "",// TODO Francais
+-          "",// TODO Norsk
+-          "",// TODO suomi
+-          "",// TODO Polski
+-          "",// TODO Español
+-          "",// TODO Ellinika
+-          "",// TODO Svenska
+-          "",// TODO Romaneste
+-          "",// TODO Magyar
+-          "",// TODO Català
+-        },
+-        {
+-          "Error can not send XXV Command",
+-          "Fehler: Kann das XXV Kommando nicht senden",
+-          "",// TODO Slovenski
+-          "",// TODO Italiano
+-          "",// TODO Nederlands
+-          "",// TODO Português
+-          "",// TODO Francais
+-          "",// TODO Norsk
+-          "",// TODO suomi
+-          "",// TODO Polski
+-          "",// TODO Español
+-          "",// TODO Ellinika
+-          "",// TODO Svenska
+-          "",// TODO Romaneste
+-          "",// TODO Magyar
+-          "",// TODO Català
+-        },
+-
+-        
+-        {
+-          "Please Wait ...",
+-          "Bitte warten ...",
+-          "",// TODO Slovenski
+-          "",// TODO Italiano
+-          "",// TODO Nederlands
+-          "",// TODO Português
+-          "",// TODO Francais
+-          "",// TODO Norsk
+-          "",// TODO suomi
+-          "",// TODO Polski
+-          "",// TODO Español
+-          "",// TODO Ellinika
+-          "",// TODO Svenska
+-          "",// TODO Romaneste
+-          "",// TODO Magyar
+-          "",// TODO Català
+-        },
+-
+-        { NULL }
+-};
+Index: xxvautotimer-0.1.2/i18n.h
+===================================================================
+--- xxvautotimer-0.1.2/i18n.h
++++ xxvautotimer-0.1.2/i18n.h	2008-04-25 12:50:33.000000000 +0300
+@@ -1,19 +0,0 @@
+-/*********************************************************
+- * DESCRIPTION: 
+- *             Header File
+- *
+- * $Id: i18n.h,v 1.4 2005/12/03 13:12:42 ralf Exp $
+- *
+- * Contact:    ranga@vdrtools.de        
+- *
+- * Copyright (C) 2005 by Ralf Dotzert
+- *********************************************************/
+-
+-#ifndef _I18N__H
+-#define _I18N__H
+-
+-#include <vdr/i18n.h>
+-
+-extern const tI18nPhrase Phrases[];
+-
+-#endif //_I18N__H
+Index: xxvautotimer-0.1.2/menu.cpp
+===================================================================
+--- xxvautotimer-0.1.2/menu.cpp
++++ xxvautotimer-0.1.2/menu.cpp	2008-04-25 12:50:33.000000000 +0300
+@@ -19,9 +19,9 @@
+ 
+ static struct XXV_Command xxvCommands[] =
+       {
+-        {"create timers", "au\r\n"},
+-        {"read EPG data", "ep\r\n"},
+-        {"read channels", "cu\r\n"},
++        {trNOOP("create timers"), "au\r\n"},
++        {trNOOP("read EPG data"), "ep\r\n"},
++        {trNOOP("read channels"), "cu\r\n"},
+       };
+ static int nrXxxvCommands=sizeof(xxvCommands)/sizeof(struct XXV_Command);
+ 
+Index: xxvautotimer-0.1.2/setup.cpp
+===================================================================
+--- xxvautotimer-0.1.2/setup.cpp
++++ xxvautotimer-0.1.2/setup.cpp	2008-04-25 12:50:33.000000000 +0300
+@@ -17,18 +17,18 @@
+ cXxvAutotimerSetup::cXxvAutotimerSetup()
+ {
+   allowed           =  " abcdefghijklmnopqrstuvwxyz0123456789-_/";
+-  strHost           = "Host";
+-  strTelnetPort     = "Telnet-Port";
+-  strDatabase       = "Database";
+-  strDatabasePort   = "Database-Port";
+-  strDatabaseUser   = "Database-User";
+-  strDatabasePasswd = "Database-Password";
+-  strLifetime       = "Default-Lifetime";
+-  strPriority       = "Default-Priority";
++  strHost           = trNOOP("Host");
++  strTelnetPort     = trNOOP("Telnet-Port");
++  strDatabase       = trNOOP("Database");
++  strDatabasePort   = trNOOP("Database-Port");
++  strDatabaseUser   = trNOOP("Database-User");
++  strDatabasePasswd = trNOOP("Database-Password");
++  strLifetime       = trNOOP("Default-Lifetime");
++  strPriority       = trNOOP("Default-Priority");
+   strPrevMinutes    = "Default-prevminutes";
+   strAfterMinutes   = "Default-afterminutes";
+ 
+-  strXXV020         = "XXV Version < 0.30";
++  strXXV020         = trNOOP("XXV Version < 0.30");
+   strDefaultDone    = "Ignore recurrences";
+ 
+   
+Index: xxvautotimer-0.1.2/xxvautotimer.cpp
+===================================================================
+--- xxvautotimer-0.1.2/xxvautotimer.cpp
++++ xxvautotimer-0.1.2/xxvautotimer.cpp	2008-04-25 12:50:33.000000000 +0300
+@@ -10,7 +10,7 @@
+ #include <vdr/plugin.h>
+ #include "setup.h"
+ #include "menu.h"
+-#include "i18n.h"
++
+ #include "inifile.h"
+ 
+ using namespace std;
+@@ -93,7 +93,7 @@
+ bool cPluginXxvautotimer::Initialize(void)
+ {
+   // Initialize any background activities the plugin shall perform.
+-  RegisterI18n(Phrases);
++  
+   return true;
+ }
+ 
+Index: xxvautotimer-0.1.2/po/de_DE.po
+===================================================================
+--- xxvautotimer-0.1.2/po/de_DE.po
++++ xxvautotimer-0.1.2/po/de_DE.po	2008-04-25 12:50:33.000000000 +0300
+@@ -0,0 +1,278 @@
++# VDR xxvautotimer plugin language source file.
++# Copyright (C) YEAR THE VDR-xxvautotimer'S COPYRIGHT HOLDER
++# This file is distributed under the same license as the VDR-xxvautotimer package.
++# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
++#
++msgid ""
++msgstr ""
++"Project-Id-Version: VDR-xxvautotimer\n"
++"Report-Msgid-Bugs-To: http://qa.mandriva.com/\n"
++"POT-Creation-Date: 2008-04-25 12:50+0300\n"
++"PO-Revision-Date: 2008-04-25 12:50+0300\n"
++"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
++"Language-Team: <vdr@linuxtv.org>\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=ISO-8859-15\n"
++"Content-Transfer-Encoding: 8bit\n"
++
++#: autotimer.cpp:227
++msgid "Display1$T"
++msgstr "T"
++
++#: autotimer.cpp:228
++msgid "Display2$S"
++msgstr "U"
++
++#: autotimer.cpp:229
++msgid "Display3$D"
++msgstr "B"
++
++#: menu.cpp:22
++msgid "create timers"
++msgstr "starte den Autotimervorgang"
++
++#: menu.cpp:23
++msgid "read EPG data"
++msgstr "lese EPG Daten ein"
++
++#: menu.cpp:24
++msgid "read channels"
++msgstr "lese Kanalliste ein"
++
++#: menu.cpp:28
++msgid "Autotimer for XXV"
++msgstr "Autotimer für XXV"
++
++#: menu.cpp:36
++msgid "Could not connect to Mysql Database"
++msgstr "Konnte nicht zur Mysql Datenbank verbinden"
++
++#: menu.cpp:69 menu.cpp:71
++msgid "Commands"
++msgstr "Befehle"
++
++#: menu.cpp:69
++msgid "Delete"
++msgstr "Löschen"
++
++#: menu.cpp:69 menu.cpp:71
++msgid "New"
++msgstr "Neu"
++
++#: menu.cpp:69
++msgid "On/Off"
++msgstr "Ein/Aus"
++
++#: menu.cpp:130
++msgid "Delete autotimer?"
++msgstr "Autotimer löschen?"
++
++#: menu.cpp:188
++msgid "Update of Database failed!"
++msgstr "Fehler beim Update der Datenbank!"
++
++#: menu.cpp:198
++msgid "Can not Insert Record!"
++msgstr "Fehler beim Einfügen des Datensatzes!"
++
++#: menu.cpp:207
++msgid "Can not Delete Record!"
++msgstr "Fehler beim Löschen des Datensatzes!"
++
++#: menu.cpp:260
++msgid "Edit XXV Autotimers"
++msgstr "XXV Autotimer ändern"
++
++#: menu.cpp:275
++msgid "Active"
++msgstr "Aktiv"
++
++#: menu.cpp:275 menu.cpp:278 menu.cpp:279 menu.cpp:280 menu.cpp:282
++#: menu.cpp:284 menu.cpp:289 menu.cpp:293 menu.cpp:311 menu.cpp:312
++#: menu.cpp:315 menu.cpp:316 menu.cpp:317 menu.cpp:318 menu.cpp:319
++#: menu.cpp:320 menu.cpp:321 menu.cpp:324 menu.cpp:328
++msgid "no"
++msgstr "Nein"
++
++#: menu.cpp:275 menu.cpp:278 menu.cpp:279 menu.cpp:280 menu.cpp:282
++#: menu.cpp:284 menu.cpp:289 menu.cpp:293 menu.cpp:311 menu.cpp:312
++#: menu.cpp:315 menu.cpp:316 menu.cpp:317 menu.cpp:318 menu.cpp:319
++#: menu.cpp:320 menu.cpp:321 menu.cpp:324 menu.cpp:328
++msgid "yes"
++msgstr "Ja"
++
++#: menu.cpp:276
++msgid "Searchstring"
++msgstr "Suchstring"
++
++#: menu.cpp:278
++msgid "Search in title"
++msgstr "Suche in Titel"
++
++#: menu.cpp:279
++msgid "Search in subtitle"
++msgstr "Suche in Untertitel"
++
++#: menu.cpp:280
++msgid "Search in descritption"
++msgstr "Suche in Beschreibung"
++
++#: menu.cpp:282
++msgid "Ignore recurrences"
++msgstr "Ignoriere Wiederholungen"
++
++#: menu.cpp:284
++msgid "Use start time"
++msgstr "Nutze Startzeit"
++
++#: menu.cpp:287
++msgid "  Start time of search"
++msgstr "  Startzeit der Suche"
++
++#: menu.cpp:289
++msgid "Use stop time"
++msgstr "Nutze Endzeit"
++
++#: menu.cpp:291
++msgid "  End time of search"
++msgstr "  Endzeit der Suche"
++
++#: menu.cpp:293
++msgid "Use channel select"
++msgstr "Senderwahl benutzen"
++
++#: menu.cpp:296
++msgid "Nr of channels"
++msgstr "Anzahl der Kanäle"
++
++#: menu.cpp:299
++msgid "  Channel"
++msgstr "  Kanal"
++
++#: menu.cpp:302
++msgid "Directory for recording"
++msgstr "Verzeichnis für Aufnahme"
++
++#: menu.cpp:304
++msgid "Minimum length"
++msgstr "Mindest Spielzeit"
++
++#: menu.cpp:305
++msgid "Priority"
++msgstr "Priorität"
++
++#: menu.cpp:306
++msgid "Lifetime"
++msgstr "Lebensdauer"
++
++#: menu.cpp:311
++msgid "Use VPS"
++msgstr "Nutze VPS"
++
++#: menu.cpp:312
++msgid "Weekdays"
++msgstr "Wochentage"
++
++#: menu.cpp:315
++msgid "  Monday"
++msgstr "  Montag"
++
++#: menu.cpp:316
++msgid "  Tuesday"
++msgstr "  Dienstag"
++
++#: menu.cpp:317
++msgid "  Wednesday"
++msgstr "  Mittwoch"
++
++#: menu.cpp:318
++msgid "  Thursday"
++msgstr "  Donnerstag"
++
++#: menu.cpp:319
++msgid "  Friday"
++msgstr "  Freitag"
++
++#: menu.cpp:320
++msgid "  Saturday"
++msgstr "  Samstag"
++
++#: menu.cpp:321
++msgid "  Sunday"
++msgstr "  Sonntag"
++
++#: menu.cpp:324
++msgid "Default Recording at start"
++msgstr "Standard-Zeitpuffer am Anfang"
++
++#: menu.cpp:326
++msgid "  Recording at start (min)"
++msgstr "  Zeitpuffer am Anfang (min)"
++
++#: menu.cpp:328
++msgid "Default Recording at stop"
++msgstr "Standard-Zeitpuffer am Ende"
++
++#: menu.cpp:330
++msgid "  Recording at stop (min)"
++msgstr "  Zeitpuffer am Ende (min)"
++
++#: menu.cpp:374
++msgid "Missing search text!"
++msgstr "Suchtext fehlt!"
++
++#: menu.cpp:379
++msgid "Search text to small - use anyway?"
++msgstr "Suchtext ist zu kurz - trotzdem verwenden?"
++
++#: menu.cpp:407
++msgid "XXV Commands"
++msgstr "XXV Befehle"
++
++#: menu.cpp:471
++msgid "Please Wait ..."
++msgstr "Bitte warten ..."
++
++#: menu.cpp:485
++msgid "Error can not send XXV Command"
++msgstr "Fehler: Kann das XXV Kommando nicht senden"
++
++#: setup.cpp:20
++msgid "Host"
++msgstr "Host"
++
++#: setup.cpp:21
++msgid "Telnet-Port"
++msgstr "Telnet-Port"
++
++#: setup.cpp:22
++msgid "Database"
++msgstr "Datenbank"
++
++#: setup.cpp:23
++msgid "Database-Port"
++msgstr "Datenbank Port"
++
++#: setup.cpp:24
++msgid "Database-User"
++msgstr "Datenbank Login"
++
++#: setup.cpp:25
++msgid "Database-Password"
++msgstr "Datenbank Passwort"
++
++#: setup.cpp:26
++msgid "Default-Lifetime"
++msgstr "Standard Lebenszeit"
++
++#: setup.cpp:27
++msgid "Default-Priority"
++msgstr "Standard Priorität"
++
++#: setup.cpp:31
++msgid "XXV Version < 0.30"
++msgstr "XXV Version < 0.30"
++
++#: setup.cpp:76
++msgid "XXVD Configuration is used:"
++msgstr "Nutze XXV Konfiguration:"
+Index: xxvautotimer-0.1.2/po/fr_FR.po
+===================================================================
+--- xxvautotimer-0.1.2/po/fr_FR.po
++++ xxvautotimer-0.1.2/po/fr_FR.po	2008-04-25 12:50:33.000000000 +0300
+@@ -0,0 +1,278 @@
++# VDR xxvautotimer plugin language source file.
++# Copyright (C) YEAR THE VDR-xxvautotimer'S COPYRIGHT HOLDER
++# This file is distributed under the same license as the VDR-xxvautotimer package.
++# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
++#
++msgid ""
++msgstr ""
++"Project-Id-Version: VDR-xxvautotimer\n"
++"Report-Msgid-Bugs-To: http://qa.mandriva.com/\n"
++"POT-Creation-Date: 2008-04-25 12:50+0300\n"
++"PO-Revision-Date: 2008-04-25 12:50+0300\n"
++"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
++"Language-Team: <vdr@linuxtv.org>\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=ISO-8859-1\n"
++"Content-Transfer-Encoding: 8bit\n"
++
++#: autotimer.cpp:227
++msgid "Display1$T"
++msgstr "T"
++
++#: autotimer.cpp:228
++msgid "Display2$S"
++msgstr "S"
++
++#: autotimer.cpp:229
++msgid "Display3$D"
++msgstr "D"
++
++#: menu.cpp:22
++msgid "create timers"
++msgstr ""
++
++#: menu.cpp:23
++msgid "read EPG data"
++msgstr ""
++
++#: menu.cpp:24
++msgid "read channels"
++msgstr ""
++
++#: menu.cpp:28
++msgid "Autotimer for XXV"
++msgstr ""
++
++#: menu.cpp:36
++msgid "Could not connect to Mysql Database"
++msgstr ""
++
++#: menu.cpp:69 menu.cpp:71
++msgid "Commands"
++msgstr ""
++
++#: menu.cpp:69
++msgid "Delete"
++msgstr ""
++
++#: menu.cpp:69 menu.cpp:71
++msgid "New"
++msgstr ""
++
++#: menu.cpp:69
++msgid "On/Off"
++msgstr ""
++
++#: menu.cpp:130
++msgid "Delete autotimer?"
++msgstr ""
++
++#: menu.cpp:188
++msgid "Update of Database failed!"
++msgstr ""
++
++#: menu.cpp:198
++msgid "Can not Insert Record!"
++msgstr ""
++
++#: menu.cpp:207
++msgid "Can not Delete Record!"
++msgstr ""
++
++#: menu.cpp:260
++msgid "Edit XXV Autotimers"
++msgstr ""
++
++#: menu.cpp:275
++msgid "Active"
++msgstr ""
++
++#: menu.cpp:275 menu.cpp:278 menu.cpp:279 menu.cpp:280 menu.cpp:282
++#: menu.cpp:284 menu.cpp:289 menu.cpp:293 menu.cpp:311 menu.cpp:312
++#: menu.cpp:315 menu.cpp:316 menu.cpp:317 menu.cpp:318 menu.cpp:319
++#: menu.cpp:320 menu.cpp:321 menu.cpp:324 menu.cpp:328
++msgid "no"
++msgstr ""
++
++#: menu.cpp:275 menu.cpp:278 menu.cpp:279 menu.cpp:280 menu.cpp:282
++#: menu.cpp:284 menu.cpp:289 menu.cpp:293 menu.cpp:311 menu.cpp:312
++#: menu.cpp:315 menu.cpp:316 menu.cpp:317 menu.cpp:318 menu.cpp:319
++#: menu.cpp:320 menu.cpp:321 menu.cpp:324 menu.cpp:328
++msgid "yes"
++msgstr ""
++
++#: menu.cpp:276
++msgid "Searchstring"
++msgstr ""
++
++#: menu.cpp:278
++msgid "Search in title"
++msgstr ""
++
++#: menu.cpp:279
++msgid "Search in subtitle"
++msgstr ""
++
++#: menu.cpp:280
++msgid "Search in descritption"
++msgstr ""
++
++#: menu.cpp:282
++msgid "Ignore recurrences"
++msgstr ""
++
++#: menu.cpp:284
++msgid "Use start time"
++msgstr ""
++
++#: menu.cpp:287
++msgid "  Start time of search"
++msgstr ""
++
++#: menu.cpp:289
++msgid "Use stop time"
++msgstr ""
++
++#: menu.cpp:291
++msgid "  End time of search"
++msgstr ""
++
++#: menu.cpp:293
++msgid "Use channel select"
++msgstr ""
++
++#: menu.cpp:296
++msgid "Nr of channels"
++msgstr ""
++
++#: menu.cpp:299
++msgid "  Channel"
++msgstr ""
++
++#: menu.cpp:302
++msgid "Directory for recording"
++msgstr ""
++
++#: menu.cpp:304
++msgid "Minimum length"
++msgstr ""
++
++#: menu.cpp:305
++msgid "Priority"
++msgstr ""
++
++#: menu.cpp:306
++msgid "Lifetime"
++msgstr ""
++
++#: menu.cpp:311
++msgid "Use VPS"
++msgstr ""
++
++#: menu.cpp:312
++msgid "Weekdays"
++msgstr ""
++
++#: menu.cpp:315
++msgid "  Monday"
++msgstr ""
++
++#: menu.cpp:316
++msgid "  Tuesday"
++msgstr ""
++
++#: menu.cpp:317
++msgid "  Wednesday"
++msgstr ""
++
++#: menu.cpp:318
++msgid "  Thursday"
++msgstr ""
++
++#: menu.cpp:319
++msgid "  Friday"
++msgstr ""
++
++#: menu.cpp:320
++msgid "  Saturday"
++msgstr ""
++
++#: menu.cpp:321
++msgid "  Sunday"
++msgstr ""
++
++#: menu.cpp:324
++msgid "Default Recording at start"
++msgstr ""
++
++#: menu.cpp:326
++msgid "  Recording at start (min)"
++msgstr ""
++
++#: menu.cpp:328
++msgid "Default Recording at stop"
++msgstr ""
++
++#: menu.cpp:330
++msgid "  Recording at stop (min)"
++msgstr ""
++
++#: menu.cpp:374
++msgid "Missing search text!"
++msgstr ""
++
++#: menu.cpp:379
++msgid "Search text to small - use anyway?"
++msgstr ""
++
++#: menu.cpp:407
++msgid "XXV Commands"
++msgstr ""
++
++#: menu.cpp:471
++msgid "Please Wait ..."
++msgstr ""
++
++#: menu.cpp:485
++msgid "Error can not send XXV Command"
++msgstr ""
++
++#: setup.cpp:20
++msgid "Host"
++msgstr ""
++
++#: setup.cpp:21
++msgid "Telnet-Port"
++msgstr ""
++
++#: setup.cpp:22
++msgid "Database"
++msgstr ""
++
++#: setup.cpp:23
++msgid "Database-Port"
++msgstr ""
++
++#: setup.cpp:24
++msgid "Database-User"
++msgstr ""
++
++#: setup.cpp:25
++msgid "Database-Password"
++msgstr ""
++
++#: setup.cpp:26
++msgid "Default-Lifetime"
++msgstr ""
++
++#: setup.cpp:27
++msgid "Default-Priority"
++msgstr ""
++
++#: setup.cpp:31
++msgid "XXV Version < 0.30"
++msgstr ""
++
++#: setup.cpp:76
++msgid "XXVD Configuration is used:"
++msgstr ""
+Index: xxvautotimer-0.1.2/po/xxvautotimer.pot
+===================================================================
+--- xxvautotimer-0.1.2/po/xxvautotimer.pot
++++ xxvautotimer-0.1.2/po/xxvautotimer.pot	2008-04-25 12:50:33.000000000 +0300
+@@ -0,0 +1,279 @@
++# SOME DESCRIPTIVE TITLE.
++# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
++# This file is distributed under the same license as the PACKAGE package.
++# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
++#
++#, fuzzy
++msgid ""
++msgstr ""
++"Project-Id-Version: PACKAGE VERSION\n"
++"Report-Msgid-Bugs-To: http://qa.mandriva.com/\n"
++"POT-Creation-Date: 2008-04-25 12:50+0300\n"
++"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
++"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
++"Language-Team: LANGUAGE <LL@li.org>\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=CHARSET\n"
++"Content-Transfer-Encoding: 8bit\n"
++
++#: autotimer.cpp:227
++msgid "Display1$T"
++msgstr ""
++
++#: autotimer.cpp:228
++msgid "Display2$S"
++msgstr ""
++
++#: autotimer.cpp:229
++msgid "Display3$D"
++msgstr ""
++
++#: menu.cpp:22
++msgid "create timers"
++msgstr ""
++
++#: menu.cpp:23
++msgid "read EPG data"
++msgstr ""
++
++#: menu.cpp:24
++msgid "read channels"
++msgstr ""
++
++#: menu.cpp:28
++msgid "Autotimer for XXV"
++msgstr ""
++
++#: menu.cpp:36
++msgid "Could not connect to Mysql Database"
++msgstr ""
++
++#: menu.cpp:69 menu.cpp:71
++msgid "Commands"
++msgstr ""
++
++#: menu.cpp:69
++msgid "Delete"
++msgstr ""
++
++#: menu.cpp:69 menu.cpp:71
++msgid "New"
++msgstr ""
++
++#: menu.cpp:69
++msgid "On/Off"
++msgstr ""
++
++#: menu.cpp:130
++msgid "Delete autotimer?"
++msgstr ""
++
++#: menu.cpp:188
++msgid "Update of Database failed!"
++msgstr ""
++
++#: menu.cpp:198
++msgid "Can not Insert Record!"
++msgstr ""
++
++#: menu.cpp:207
++msgid "Can not Delete Record!"
++msgstr ""
++
++#: menu.cpp:260
++msgid "Edit XXV Autotimers"
++msgstr ""
++
++#: menu.cpp:275
++msgid "Active"
++msgstr ""
++
++#: menu.cpp:275 menu.cpp:278 menu.cpp:279 menu.cpp:280 menu.cpp:282
++#: menu.cpp:284 menu.cpp:289 menu.cpp:293 menu.cpp:311 menu.cpp:312
++#: menu.cpp:315 menu.cpp:316 menu.cpp:317 menu.cpp:318 menu.cpp:319
++#: menu.cpp:320 menu.cpp:321 menu.cpp:324 menu.cpp:328
++msgid "no"
++msgstr ""
++
++#: menu.cpp:275 menu.cpp:278 menu.cpp:279 menu.cpp:280 menu.cpp:282
++#: menu.cpp:284 menu.cpp:289 menu.cpp:293 menu.cpp:311 menu.cpp:312
++#: menu.cpp:315 menu.cpp:316 menu.cpp:317 menu.cpp:318 menu.cpp:319
++#: menu.cpp:320 menu.cpp:321 menu.cpp:324 menu.cpp:328
++msgid "yes"
++msgstr ""
++
++#: menu.cpp:276
++msgid "Searchstring"
++msgstr ""
++
++#: menu.cpp:278
++msgid "Search in title"
++msgstr ""
++
++#: menu.cpp:279
++msgid "Search in subtitle"
++msgstr ""
++
++#: menu.cpp:280
++msgid "Search in descritption"
++msgstr ""
++
++#: menu.cpp:282
++msgid "Ignore recurrences"
++msgstr ""
++
++#: menu.cpp:284
++msgid "Use start time"
++msgstr ""
++
++#: menu.cpp:287
++msgid "  Start time of search"
++msgstr ""
++
++#: menu.cpp:289
++msgid "Use stop time"
++msgstr ""
++
++#: menu.cpp:291
++msgid "  End time of search"
++msgstr ""
++
++#: menu.cpp:293
++msgid "Use channel select"
++msgstr ""
++
++#: menu.cpp:296
++msgid "Nr of channels"
++msgstr ""
++
++#: menu.cpp:299
++msgid "  Channel"
++msgstr ""
++
++#: menu.cpp:302
++msgid "Directory for recording"
++msgstr ""
++
++#: menu.cpp:304
++msgid "Minimum length"
++msgstr ""
++
++#: menu.cpp:305
++msgid "Priority"
++msgstr ""
++
++#: menu.cpp:306
++msgid "Lifetime"
++msgstr ""
++
++#: menu.cpp:311
++msgid "Use VPS"
++msgstr ""
++
++#: menu.cpp:312
++msgid "Weekdays"
++msgstr ""
++
++#: menu.cpp:315
++msgid "  Monday"
++msgstr ""
++
++#: menu.cpp:316
++msgid "  Tuesday"
++msgstr ""
++
++#: menu.cpp:317
++msgid "  Wednesday"
++msgstr ""
++
++#: menu.cpp:318
++msgid "  Thursday"
++msgstr ""
++
++#: menu.cpp:319
++msgid "  Friday"
++msgstr ""
++
++#: menu.cpp:320
++msgid "  Saturday"
++msgstr ""
++
++#: menu.cpp:321
++msgid "  Sunday"
++msgstr ""
++
++#: menu.cpp:324
++msgid "Default Recording at start"
++msgstr ""
++
++#: menu.cpp:326
++msgid "  Recording at start (min)"
++msgstr ""
++
++#: menu.cpp:328
++msgid "Default Recording at stop"
++msgstr ""
++
++#: menu.cpp:330
++msgid "  Recording at stop (min)"
++msgstr ""
++
++#: menu.cpp:374
++msgid "Missing search text!"
++msgstr ""
++
++#: menu.cpp:379
++msgid "Search text to small - use anyway?"
++msgstr ""
++
++#: menu.cpp:407
++msgid "XXV Commands"
++msgstr ""
++
++#: menu.cpp:471
++msgid "Please Wait ..."
++msgstr ""
++
++#: menu.cpp:485
++msgid "Error can not send XXV Command"
++msgstr ""
++
++#: setup.cpp:20
++msgid "Host"
++msgstr ""
++
++#: setup.cpp:21
++msgid "Telnet-Port"
++msgstr ""
++
++#: setup.cpp:22
++msgid "Database"
++msgstr ""
++
++#: setup.cpp:23
++msgid "Database-Port"
++msgstr ""
++
++#: setup.cpp:24
++msgid "Database-User"
++msgstr ""
++
++#: setup.cpp:25
++msgid "Database-Password"
++msgstr ""
++
++#: setup.cpp:26
++msgid "Default-Lifetime"
++msgstr ""
++
++#: setup.cpp:27
++msgid "Default-Priority"
++msgstr ""
++
++#: setup.cpp:31
++msgid "XXV Version < 0.30"
++msgstr ""
++
++#: setup.cpp:76
++msgid "XXVD Configuration is used:"
++msgstr ""

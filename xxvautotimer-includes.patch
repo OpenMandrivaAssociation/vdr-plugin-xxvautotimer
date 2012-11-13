@@ -1,0 +1,51 @@
+Index: xxvautotimer-0.1.2/inifile.cpp
+===================================================================
+--- xxvautotimer-0.1.2/inifile.cpp
++++ xxvautotimer-0.1.2/inifile.cpp	2009-07-27 22:51:01.126093963 +0300
+@@ -43,6 +43,10 @@
+ #include <stdarg.h>
+ #include <fstream>
+ #include <float.h>
++#include <cstring>
++#include <strings.h>
++#include <limits.h>
++#include <cstdlib>
+ 
+ #ifdef WIN32
+ #include <windows.h>
+Index: xxvautotimer-0.1.2/mysqlwrapped-1.4/StderrLog.cpp
+===================================================================
+--- xxvautotimer-0.1.2/mysqlwrapped-1.4/StderrLog.cpp
++++ xxvautotimer-0.1.2/mysqlwrapped-1.4/StderrLog.cpp	2009-07-27 22:51:58.145094189 +0300
+@@ -27,6 +27,7 @@
+ 
+ #include <string>
+ #include <map>
++#include <cstdio>
+ #ifdef WIN32
+ #include <config-win.h>
+ #include <mysql.h>
+Index: xxvautotimer-0.1.2/mysqlwrapped-1.4/SysLog.cpp
+===================================================================
+--- xxvautotimer-0.1.2/mysqlwrapped-1.4/SysLog.cpp
++++ xxvautotimer-0.1.2/mysqlwrapped-1.4/SysLog.cpp	2009-07-27 22:51:01.211002113 +0300
+@@ -23,6 +23,7 @@
+ */
+ #ifndef WIN32
+ 
++#include <string.h>
+ #include <mysql/mysql.h>
+ #include <syslog.h>
+ 
+Index: xxvautotimer-0.1.2/mysqlwrapped-1.4/enum_t.cpp
+===================================================================
+--- xxvautotimer-0.1.2/mysqlwrapped-1.4/enum_t.cpp
++++ xxvautotimer-0.1.2/mysqlwrapped-1.4/enum_t.cpp	2009-07-27 22:51:01.349092981 +0300
+@@ -21,6 +21,7 @@
+ #pragma warning(disable:4786)
+ #endif
+ 
++#include <strings.h>
+ #include "enum_t.h"
+ 
+ 

@@ -68,3 +68,67 @@ rm -rf %{buildroot}
 %defattr(-,root,root)
 %doc %plugin/README %plugin/HISTORY
 %{_bindir}/epg2xxvautotimer.pl
+
+
+%changelog
+* Tue Jul 28 2009 Anssi Hannula <anssi@mandriva.org> 0.1.2-12mdv2010.0
++ Revision: 401088
+- rebuild for new VDR
+- add another missing include (update includes.patch)
+
+* Sat Mar 21 2009 Anssi Hannula <anssi@mandriva.org> 0.1.2-11mdv2009.1
++ Revision: 359801
+- fix includes (includes.patch)
+- fix format strings (format-string.patch)
+- rebuild for new vdr
+- define %%_localstatedir locally for backportability
+
+  + Funda Wang <fwang@mandriva.org>
+    - rebuild for new mysql
+
+  + Oden Eriksson <oeriksson@mandriva.com>
+    - rebuilt against mysql-5.1.30 libs
+
+  + Pixel <pixel@mandriva.com>
+    - adapt to %%_localstatedir now being /var instead of /var/lib (#22312)
+
+* Mon Apr 28 2008 Anssi Hannula <anssi@mandriva.org> 0.1.2-8mdv2009.0
++ Revision: 198000
+- rebuild for new vdr
+
+* Sat Apr 26 2008 Anssi Hannula <anssi@mandriva.org> 0.1.2-7mdv2009.0
++ Revision: 197745
+- add vdr_plugin_prep
+- bump buildrequires on vdr-devel
+- adapt to gettext i18n of VDR 1.6 (semi-automatic patch)
+
+* Fri Jan 04 2008 Anssi Hannula <anssi@mandriva.org> 0.1.2-6mdv2008.1
++ Revision: 145268
+- rebuild for new vdr
+
+  + Olivier Blin <oblin@mandriva.com>
+    - restore BuildRoot
+
+  + Thierry Vignaud <tv@mandriva.org>
+    - kill re-definition of %%buildroot on Pixel's request
+
+* Mon Oct 29 2007 Anssi Hannula <anssi@mandriva.org> 0.1.2-5mdv2008.1
++ Revision: 103252
+- rebuild for new vdr
+
+* Sun Jul 08 2007 Anssi Hannula <anssi@mandriva.org> 0.1.2-4mdv2008.0
++ Revision: 50064
+- rebuild for new vdr
+
+* Thu Jun 21 2007 Anssi Hannula <anssi@mandriva.org> 0.1.2-3mdv2008.0
++ Revision: 42147
+- rebuild for new vdr
+
+* Sat May 05 2007 Anssi Hannula <anssi@mandriva.org> 0.1.2-2mdv2008.0
++ Revision: 22726
+- rebuild for new vdr
+
+* Sat Apr 21 2007 Anssi Hannula <anssi@mandriva.org> 0.1.2-1mdv2008.0
++ Revision: 16469
+- initial Mandriva release
+

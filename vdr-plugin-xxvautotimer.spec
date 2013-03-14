@@ -2,7 +2,7 @@
 %define plugin	xxvautotimer
 %define name	vdr-plugin-%plugin
 %define version	0.1.2
-%define rel	12
+%define rel	13
 
 # backportability
 %define _localstatedir %{_var}
@@ -18,7 +18,6 @@ Source:		http://www.vdrtools.de/download/vdr-%plugin-%version.tar.bz2
 Patch0:		xxvautotimer-0.1.2-i18n-1.6.patch
 Patch1:		xxvautotimer-includes.patch
 Patch2:		xxvautotimer-format-string.patch
-BuildRoot:	%{_tmppath}/%{name}-buildroot
 BuildRequires:	vdr-devel >= 1.6.0
 BuildRequires:	mysql-devel
 Requires:	vdr-abi = %vdr_abi
@@ -48,21 +47,11 @@ cd %plugin
 %vdr_plugin_build
 
 %install
-rm -rf %{buildroot}
 cd %plugin
 %vdr_plugin_install
 
 install -d -m755 %{buildroot}%{_bindir}
 install -m755 Scripte/* %{buildroot}%{_bindir}
-
-%clean
-rm -rf %{buildroot}
-
-%post
-%vdr_plugin_post %plugin
-
-%postun
-%vdr_plugin_postun %plugin
 
 %files -f %plugin/%plugin.vdr
 %defattr(-,root,root)

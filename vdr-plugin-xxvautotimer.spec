@@ -6,7 +6,7 @@
 Summary:	VDR plugin: Autotimer for XXV
 Name:		vdr-plugin-%plugin
 Version:	0.1.2
-Release:	14
+Release:	15
 Group:		Video
 License:	GPL
 URL:		http://www.vdrtools.de/vdrxxvautotimer.html

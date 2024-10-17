@@ -9,7 +9,7 @@ Version:	0.1.2
 Release:	15
 Group:		Video
 License:	GPL
-URL:		http://www.vdrtools.de/vdrxxvautotimer.html
+URL:		https://www.vdrtools.de/vdrxxvautotimer.html
 Source:		http://www.vdrtools.de/download/vdr-%plugin-%{version}.tar.bz2
 Patch0:		xxvautotimer-0.1.2-i18n-1.6.patch
 Patch1:		xxvautotimer-includes.patch
